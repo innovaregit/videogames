@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Jump4.png-ca3f7cbf78d5e2782ab06b9e336e39b5.stex"
+path="res://.import/button-23948_960_720.png-6e3aa66664219b8a5f76fc8de61d9d12.stex"
 
 [deps]
 
-source_file="res://images/animations/Jump4.png"
-source_md5="aa5a726d1946bff134c1e28e62e64184"
+source_file="res://images/button-23948_960_720.png"
+source_md5="675b1144b8869a5800659415c9ac4805"
 
-dest_files=[ "res://.import/Jump4.png-ca3f7cbf78d5e2782ab06b9e336e39b5.stex" ]
-dest_md5="06c1bbb9ff21dbcb4be208afd0c14ed4"
+dest_files=[ "res://.import/button-23948_960_720.png-6e3aa66664219b8a5f76fc8de61d9d12.stex" ]
+dest_md5="90b03c6cad653f3cb49e829ea9f9742b"
 
 [params]
 

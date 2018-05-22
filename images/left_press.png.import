@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Jump4.png-ca3f7cbf78d5e2782ab06b9e336e39b5.stex"
+path="res://.import/left_press.png-bfb8c2360918e1e2a62d9ea528189657.stex"
 
 [deps]
 
-source_file="res://images/animations/Jump4.png"
-source_md5="aa5a726d1946bff134c1e28e62e64184"
+source_file="res://images/left_press.png"
+source_md5="75ba9628d7b9636a302e7be9798e7c51"
 
-dest_files=[ "res://.import/Jump4.png-ca3f7cbf78d5e2782ab06b9e336e39b5.stex" ]
-dest_md5="06c1bbb9ff21dbcb4be208afd0c14ed4"
+dest_files=[ "res://.import/left_press.png-bfb8c2360918e1e2a62d9ea528189657.stex" ]
+dest_md5="415d11a99e195a38fc0b273a7ea8986f"
 
 [params]
 

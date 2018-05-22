@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://tilemaps/tileset1.tres" type="TileSet" id=1]
 [ext_resource path="res://images/animations/Idle0.png" type="Texture" id=2]
@@ -12,26 +12,39 @@
 [ext_resource path="res://images/animations/Run3.png" type="Texture" id=10]
 [ext_resource path="res://images/animations/Run4.png" type="Texture" id=11]
 [ext_resource path="res://images/animations/Run7.png" type="Texture" id=12]
-[ext_resource path="res://images/fondo.png" type="Texture" id=13]
+[ext_resource path="res://fonts/zorque.ttf" type="DynamicFontData" id=13]
+[ext_resource path="res://images/left.png" type="Texture" id=14]
+[ext_resource path="res://images/left_press.png" type="Texture" id=15]
+[ext_resource path="res://images/button-23948_960_720.png" type="Texture" id=16]
+[ext_resource path="res://images/buttonPress.png" type="Texture" id=17]
+[ext_resource path="res://images/fondo.png" type="Texture" id=18]
+[ext_resource path="res://scenes/assets/moneda.tscn" type="PackedScene" id=19]
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=5]
 
 script/source = "extends KinematicBody2D
 
 var motion = Vector2()
 const up = Vector2(0,-5)
 onready var sprite = get_node(\"Sprite\")
+onready var label = get_node(\"canvas/contador\")
+
+onready var btnIzquierda = get_node(\"canvas/btnIzquierda\")
+onready var btnDerecha = get_node(\"canvas/btnDerecha\")
+onready var btnSalto = get_node(\"canvas/btnSalto\")
+
 var anim = \"idle\"
 
 func _ready():
 	pass
 
 func _physics_process(delta):
+	label.text = str(global.contador_monedas)
 	motion.y+=3
 	
-	if Input.is_action_pressed(\"ui_left\"):
+	if Input.is_action_pressed(\"ui_left\") or btnIzquierda.is_pressed():
 		motion.x= -60
-	elif Input.is_action_pressed(\"ui_right\"):
+	elif Input.is_action_pressed(\"ui_right\")  or btnDerecha.is_pressed():
 		motion.x= 60
 	else:
 		motion.x = 0
@@ -47,19 +60,19 @@ func _physics_process(delta):
 		sprite.set_flip_h(true)
 		
 	if is_on_floor():
-		if Input.is_action_just_pressed(\"ui_up\"):
+		if Input.is_action_just_pressed(\"ui_up\")  or btnSalto.is_pressed():
 			motion.y = -250
 			anim = \"jump\"
 			
 	sprite.play(anim)
 	move_and_slide(motion, up)"
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=6]
 
 custom_solver_bias = 0.0
 extents = Vector2( 31.45, 25.4 )
 
-[sub_resource type="SpriteFrames" id=3]
+[sub_resource type="SpriteFrames" id=7]
 
 animations = [ {
 "frames": [ ExtResource( 2 ) ],
@@ -77,6 +90,14 @@ animations = [ {
 "name": "running",
 "speed": 5.0
 } ]
+
+[sub_resource type="DynamicFont" id=4]
+
+size = 50
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 13 )
+_sections_unfolded = [ "Font", "Resource", "Settings" ]
 
 [node name="mundo" type="Node2D" index="0"]
 
@@ -108,7 +129,7 @@ input_pickable = false
 collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
-script = SubResource( 1 )
+script = SubResource( 5 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -117,11 +138,11 @@ __meta__ = {
 
 position = Vector2( -0.650017, 3.35 )
 scale = Vector2( 0.529754, 1.11796 )
-shape = SubResource( 2 )
+shape = SubResource( 6 )
 
 [node name="Sprite" type="AnimatedSprite" parent="personaje" index="1"]
 
-frames = SubResource( 3 )
+frames = SubResource( 7 )
 animation = "idle"
 _sections_unfolded = [ "Animation", "Offset", "Region", "Transform", "Visibility", "Z Index" ]
 
@@ -150,6 +171,116 @@ editor_draw_screen = true
 editor_draw_limits = false
 editor_draw_drag_margin = false
 
+[node name="canvas" type="CanvasLayer" parent="personaje" index="3"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+
+[node name="contador" type="Label" parent="personaje/canvas" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 21.0
+margin_top = 23.0
+margin_right = 61.0
+margin_bottom = 84.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 4 )
+text = "0"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "custom_colors", "custom_constants", "custom_fonts", "custom_styles" ]
+
+[node name="btnIzquierda" type="TextureButton" parent="personaje/canvas" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 43.0
+margin_top = 468.0
+margin_right = 1023.0
+margin_bottom = 1448.0
+rect_scale = Vector2( 0.1, 0.1 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+texture_normal = ExtResource( 14 )
+texture_pressed = ExtResource( 15 )
+_sections_unfolded = [ "Rect", "Textures" ]
+
+[node name="btnDerecha" type="TextureButton" parent="personaje/canvas" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 254.0
+margin_top = 565.0
+margin_right = 1234.0
+margin_bottom = 1545.0
+rect_rotation = 180.0
+rect_scale = Vector2( 0.1, 0.1 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+texture_normal = ExtResource( 14 )
+texture_pressed = ExtResource( 15 )
+_sections_unfolded = [ "Rect", "Textures" ]
+
+[node name="btnSalto" type="TextureButton" parent="personaje/canvas" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 876.0
+margin_top = 468.0
+margin_right = 1596.0
+margin_bottom = 1188.0
+rect_scale = Vector2( 0.13, 0.13 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+texture_normal = ExtResource( 16 )
+texture_pressed = ExtResource( 17 )
+_sections_unfolded = [ "Rect", "Textures" ]
+
 [node name="ParallaxBackground" type="ParallaxBackground" parent="." index="2"]
 
 layer = -1
@@ -174,6 +305,34 @@ _sections_unfolded = [ "Motion" ]
 [node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer" index="0"]
 
 position = Vector2( 508, 202 )
-texture = ExtResource( 13 )
+texture = ExtResource( 18 )
+
+[node name="monedas" type="Node2D" parent="." index="3"]
+
+editor/display_folded = true
+
+[node name="moneda" parent="monedas" index="0" instance=ExtResource( 19 )]
+
+position = Vector2( 372, 387 )
+scale = Vector2( 0.3, 0.3 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="moneda2" parent="monedas" index="1" instance=ExtResource( 19 )]
+
+position = Vector2( 600, 333 )
+scale = Vector2( 0.3, 0.3 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="moneda3" parent="monedas" index="2" instance=ExtResource( 19 )]
+
+position = Vector2( 198, 383 )
+scale = Vector2( 0.3, 0.3 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="moneda4" parent="monedas" index="3" instance=ExtResource( 19 )]
+
+position = Vector2( 254, 240 )
+scale = Vector2( 0.3, 0.3 )
+_sections_unfolded = [ "Transform" ]
 
 
