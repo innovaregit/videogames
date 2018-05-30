@@ -1,26 +1,30 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://tilemaps/tileset1.tres" type="TileSet" id=1]
 [ext_resource path="res://images/animations/Idle0.png" type="Texture" id=2]
-[ext_resource path="res://images/animations/Jump0.png" type="Texture" id=3]
-[ext_resource path="res://images/animations/Jump1.png" type="Texture" id=4]
-[ext_resource path="res://images/animations/Jump3.png" type="Texture" id=5]
-[ext_resource path="res://images/animations/Jump4.png" type="Texture" id=6]
-[ext_resource path="res://images/animations/Run0.png" type="Texture" id=7]
-[ext_resource path="res://images/animations/Run1.png" type="Texture" id=8]
-[ext_resource path="res://images/animations/Run2.png" type="Texture" id=9]
-[ext_resource path="res://images/animations/Run3.png" type="Texture" id=10]
-[ext_resource path="res://images/animations/Run4.png" type="Texture" id=11]
-[ext_resource path="res://images/animations/Run7.png" type="Texture" id=12]
+[ext_resource path="res://images/animations/Run0.png" type="Texture" id=3]
+[ext_resource path="res://images/animations/Run1.png" type="Texture" id=4]
+[ext_resource path="res://images/animations/Run2.png" type="Texture" id=5]
+[ext_resource path="res://images/animations/Run3.png" type="Texture" id=6]
+[ext_resource path="res://images/animations/Run4.png" type="Texture" id=7]
+[ext_resource path="res://images/animations/Run7.png" type="Texture" id=8]
+[ext_resource path="res://images/animations/Jump0.png" type="Texture" id=9]
+[ext_resource path="res://images/animations/Jump1.png" type="Texture" id=10]
+[ext_resource path="res://images/animations/Jump3.png" type="Texture" id=11]
+[ext_resource path="res://images/animations/Jump4.png" type="Texture" id=12]
 [ext_resource path="res://fonts/zorque.ttf" type="DynamicFontData" id=13]
 [ext_resource path="res://images/left.png" type="Texture" id=14]
 [ext_resource path="res://images/left_press.png" type="Texture" id=15]
 [ext_resource path="res://images/button-23948_960_720.png" type="Texture" id=16]
 [ext_resource path="res://images/buttonPress.png" type="Texture" id=17]
-[ext_resource path="res://images/fondo.png" type="Texture" id=18]
-[ext_resource path="res://scenes/assets/moneda.tscn" type="PackedScene" id=19]
+[ext_resource path="res://sounds/jump_10.wav" type="AudioStream" id=18]
+[ext_resource path="res://images/fondo.png" type="Texture" id=19]
+[ext_resource path="res://scenes/assets/moneda.tscn" type="PackedScene" id=20]
+[ext_resource path="res://scenes/PathFollow2D.gd" type="Script" id=21]
+[ext_resource path="res://scenes/assets/enemigos.tscn" type="PackedScene" id=22]
+[ext_resource path="res://sounds/back.wav" type="AudioStream" id=23]
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=1]
 
 script/source = "extends KinematicBody2D
 
@@ -32,7 +36,7 @@ onready var label = get_node(\"canvas/contador\")
 onready var btnIzquierda = get_node(\"canvas/btnIzquierda\")
 onready var btnDerecha = get_node(\"canvas/btnDerecha\")
 onready var btnSalto = get_node(\"canvas/btnSalto\")
-
+onready var audiojump = get_node(\"audiojump\")
 var anim = \"idle\"
 
 func _ready():
@@ -63,16 +67,17 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed(\"ui_up\")  or btnSalto.is_pressed():
 			motion.y = -250
 			anim = \"jump\"
+			audiojump.play()
 			
 	sprite.play(anim)
 	move_and_slide(motion, up)"
 
-[sub_resource type="RectangleShape2D" id=6]
+[sub_resource type="RectangleShape2D" id=2]
 
 custom_solver_bias = 0.0
 extents = Vector2( 31.45, 25.4 )
 
-[sub_resource type="SpriteFrames" id=7]
+[sub_resource type="SpriteFrames" id=3]
 
 animations = [ {
 "frames": [ ExtResource( 2 ) ],
@@ -80,14 +85,14 @@ animations = [ {
 "name": "idle",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ) ],
-"loop": false,
-"name": "jump",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ) ],
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
 "loop": true,
 "name": "running",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ) ],
+"loop": false,
+"name": "jump",
 "speed": 5.0
 } ]
 
@@ -98,6 +103,13 @@ use_mipmaps = false
 use_filter = false
 font_data = ExtResource( 13 )
 _sections_unfolded = [ "Font", "Resource", "Settings" ]
+
+[sub_resource type="Curve2D" id=5]
+
+bake_interval = 5.0
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 1043, 128, 0, 0, 0, 0, 843, 130, 0, 0, 0, 0, 562, 413, 0, 0, 0, 0, 145, 413, 0, 0, 0, 0, 165, 272, 0, 0, 0, 0, 239, 273, 0, 0, 0, 0, 249, 207, 0, 0, 0, 0, 178, 205, 0, 0, 0, 0, 167, 136, 0, 0, 0, 0, 100, 133, 0, 0, 0, 0, 85.6, 69, 0, 0, 0, 0, 14.4, 55.6, 0, 0, 0, 0, -78.6, 438.6 )
+}
 
 [node name="mundo" type="Node2D" index="0"]
 
@@ -129,7 +141,7 @@ input_pickable = false
 collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
-script = SubResource( 5 )
+script = SubResource( 1 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -138,11 +150,11 @@ __meta__ = {
 
 position = Vector2( -0.650017, 3.35 )
 scale = Vector2( 0.529754, 1.11796 )
-shape = SubResource( 6 )
+shape = SubResource( 2 )
 
 [node name="Sprite" type="AnimatedSprite" parent="personaje" index="1"]
 
-frames = SubResource( 7 )
+frames = SubResource( 3 )
 animation = "idle"
 _sections_unfolded = [ "Animation", "Offset", "Region", "Transform", "Visibility", "Z Index" ]
 
@@ -173,6 +185,7 @@ editor_draw_drag_margin = false
 
 [node name="canvas" type="CanvasLayer" parent="personaje" index="3"]
 
+editor/display_folded = true
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -281,8 +294,19 @@ texture_normal = ExtResource( 16 )
 texture_pressed = ExtResource( 17 )
 _sections_unfolded = [ "Rect", "Textures" ]
 
+[node name="audiojump" type="AudioStreamPlayer2D" parent="personaje" index="4"]
+
+stream = ExtResource( 18 )
+volume_db = 0.0
+autoplay = false
+max_distance = 2000.0
+attenuation = 1.0
+bus = "Master"
+area_mask = 1
+
 [node name="ParallaxBackground" type="ParallaxBackground" parent="." index="2"]
 
+editor/display_folded = true
 layer = -1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -305,34 +329,75 @@ _sections_unfolded = [ "Motion" ]
 [node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer" index="0"]
 
 position = Vector2( 508, 202 )
-texture = ExtResource( 18 )
+texture = ExtResource( 19 )
 
 [node name="monedas" type="Node2D" parent="." index="3"]
 
 editor/display_folded = true
 
-[node name="moneda" parent="monedas" index="0" instance=ExtResource( 19 )]
+[node name="moneda" parent="monedas" index="0" instance=ExtResource( 20 )]
 
 position = Vector2( 372, 387 )
 scale = Vector2( 0.3, 0.3 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="moneda2" parent="monedas" index="1" instance=ExtResource( 19 )]
+[node name="moneda2" parent="monedas" index="1" instance=ExtResource( 20 )]
 
 position = Vector2( 600, 333 )
 scale = Vector2( 0.3, 0.3 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="moneda3" parent="monedas" index="2" instance=ExtResource( 19 )]
+[node name="moneda3" parent="monedas" index="2" instance=ExtResource( 20 )]
 
 position = Vector2( 198, 383 )
 scale = Vector2( 0.3, 0.3 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="moneda4" parent="monedas" index="3" instance=ExtResource( 19 )]
+[node name="moneda4" parent="monedas" index="3" instance=ExtResource( 20 )]
 
 position = Vector2( 254, 240 )
 scale = Vector2( 0.3, 0.3 )
 _sections_unfolded = [ "Transform" ]
+
+[node name="enemigos" type="Node2D" parent="." index="4"]
+
+editor/display_folded = true
+_sections_unfolded = [ "Transform" ]
+
+[node name="Path2D" type="Path2D" parent="enemigos" index="0"]
+
+curve = SubResource( 5 )
+_sections_unfolded = [ "Transform", "Z Index" ]
+
+[node name="PathFollow2D" type="PathFollow2D" parent="enemigos/Path2D" index="0"]
+
+position = Vector2( 1043, 128 )
+rotation = 3.13159
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = true
+cubic_interp = true
+loop = true
+lookahead = 4.0
+script = ExtResource( 21 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="enemigos" parent="enemigos/Path2D/PathFollow2D" index="0" instance=ExtResource( 22 )]
+
+position = Vector2( 1.94983, 5.01974 )
+rotation = -3.26978
+z_as_relative = false
+_sections_unfolded = [ "Transform", "Z Index" ]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." index="5"]
+
+stream = ExtResource( 23 )
+volume_db = 0.0
+autoplay = true
+max_distance = 2000.0
+attenuation = 1.0
+bus = "Master"
+area_mask = 1
 
 
